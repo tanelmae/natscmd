@@ -6,6 +6,7 @@ import (
 	"github.com/goombaio/namegenerator"
 	nats "github.com/nats-io/nats.go"
 	"log"
+	"os"
 	"time"
 )
 
@@ -13,6 +14,9 @@ const (
 	pubCmd = "pub"
 	subCmd = "sub"
 )
+
+// Version of this tool
+var Version string = "dev"
 
 func main() {
 	natsURL := flag.String("nats", "nats://localhost:4222", "NATS server URL")
@@ -22,8 +26,14 @@ func main() {
 	timeout := flag.Duration("timeout", time.Second*30, "Subscriber timeout")
 	certsDir := flag.String("certs", "", "(Optional) Path to directory with client.pem, client-key.pem and ca.pem")
 	creds := flag.String("creds", "", "(Optional) Path to credentials file")
+	v := flag.Bool("v", false, "Version")
 
 	flag.Parse()
+
+	if *v {
+		fmt.Printf("Version: %s\n", Version)
+		os.Exit(0)
+	}
 
 	name := randomName()
 	log.Printf("Name: %s\n", name)
