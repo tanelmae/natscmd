@@ -17,3 +17,25 @@ checksum:
   name_template: "checksums.txt"
 snapshot:
   name_template: "{{ .Tag }}-next"
+brews:
+  - name: natscmd
+
+    # Github repository to push the tap to.
+    github:
+      owner: tanelmae
+      name: homebrew-brew
+
+    url_template: "http://github.com/tanelmae/natscmd/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    commit_author:
+      name: tanelmae
+      email: tanel.mae@gmail.com
+
+    folder: Formula
+
+    homepage: "https://github.com/tanelmae/natscmd"
+
+    description: "Simple NATS client for quick and dirty manual configuration testing"
+
+    test: |
+      system "#{bin}/natscmd -v"
