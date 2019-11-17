@@ -13,6 +13,8 @@ import (
 const (
 	pubCmd = "pub"
 	subCmd = "sub"
+	reqCmd = "req"
+	repCmd = "rep"
 )
 
 // Version of this tool
@@ -20,7 +22,7 @@ var Version string = "dev"
 
 func main() {
 	natsURL := flag.String("nats", "nats://localhost:4222", "NATS server URL")
-	cmd := flag.String("cmd", "sub", "send or listen")
+	cmd := flag.String("cmd", "sub", "sub, pub or req")
 	subject := flag.String("subject", "test", "NATS subject to use")
 	message := flag.String("message", "Hello World", "Message to send")
 	timeout := flag.Duration("timeout", time.Second*30, "Subscriber timeout")
@@ -72,8 +74,25 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Printf("Received message '%s' from '%s'", string(m.Data), m.Subject)
+	case reqCmd:
+		msg, err := nc.Request(*subject, []byte(name+":"+*message), 2*time.Second)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf(string(msg.Data))
+	case repCmd:
+		sub, err := nc.SubscribeSync(*subject)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		msg, err := sub.NextMsg(*timeout)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf(string(msg.Data))
+		msg.Respond([]byte(name + ":" + *message))
 	}
-	// Close connection
 	nc.Close()
 }
 
