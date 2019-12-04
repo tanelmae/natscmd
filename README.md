@@ -25,3 +25,13 @@ Usage:
 $ go mod vendor
 $ go build -mod=readonly natscmd.go
 ```
+
+
+#### Release downloads:
+https://github.com/tanelmae/natscmd/releases
+
+#### Install with Homebrew:
+
+Binaries provided for Darwin_x86_64 and Linux_x86_64
+```
+brew install tanelmae/brew/natscmd
